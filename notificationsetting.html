@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Settings</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+        }
+        .container {
+            width: 90%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        /* Heading */
+        h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        /* Toggle Switch */
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            transition: 0.3s ease-in-out;
+        }
+        .toggle-container:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Modern Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            cursor: pointer;
+        }
+        .toggle-switch input {
+            display: none;
+        }
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ccc;
+            border-radius: 26px;
+            transition: all 0.3s ease;
+        }
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        input:checked + .slider {
+            background: linear-gradient(45deg, #4CAF50, #00C853);
+        }
+        input:checked + .slider::before {
+            transform: translateX(24px);
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: 0.3s ease-in-out;
+        }
+        .save-btn {
+            background: linear-gradient(45deg, #4CAF50, #00C853);
+            color: white;
+            font-weight: bold;
+        }
+        .save-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+        .back-btn {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            font-weight: bold;
+        }
+        .back-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        /* Confirmation Message */
+        .confirmation {
+            display: none;
+            margin-top: 10px;
+            color: #4CAF50;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <button class="btn back-btn" onclick="goBack()">Back</button>
+        <h2>Notification Settings</h2>
+
+        <div class="toggle-container" onclick="toggleSwitch('appUpdate')">
+            <span>App Updates</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="appUpdate">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-container" onclick="toggleSwitch('offers')">
+            <span>Special Offers</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="offers">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="toggle-container" onclick="toggleSwitch('priceDrop')">
+            <span>Price Drops</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="priceDrop">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <button class="btn save-btn" onclick="saveSettings()">✅ Save Settings</button>
+
+        <p class="confirmation" id="confirmationMsg">✅ Settings Saved Successfully!</p>
+    </div>
+
+    <script>
+        // Load settings when page opens
+        document.addEventListener("DOMContentLoaded", function () {
+            const savedSettings = JSON.parse(localStorage.getItem("userSettings"));
+            if (savedSettings) {
+                document.getElementById("appUpdate").checked = savedSettings.appUpdate;
+                document.getElementById("offers").checked = savedSettings.offers;
+                document.getElementById("priceDrop").checked = savedSettings.priceDrop;
+            }
+        });
+
+        // Toggle checkbox on click
+        function toggleSwitch(setting) {
+            let checkbox = document.getElementById(setting);
+            checkbox.checked = !checkbox.checked;
+        }
+
+        function saveSettings() {
+            const settings = {
+                appUpdate: document.getElementById("appUpdate").checked,
+                offers: document.getElementById("offers").checked,
+                priceDrop: document.getElementById("priceDrop").checked
+            };
+
+            // Save in localStorage
+            localStorage.setItem("userSettings", JSON.stringify(settings));
+
+            // Show confirmation message
+            const confirmationMsg = document.getElementById("confirmationMsg");
+            confirmationMsg.style.display = "block";
+
+            // Redirect after 1 second
+            setTimeout(() => {
+                window.location.href = "account.html";
+            }, 1000);
+        }
+
+        function goBack() {
+            window.location.href = "account.html";
+        }
+    </script>
+
+</body>
+</html>

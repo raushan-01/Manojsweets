@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>प्रोफ़ाइल संपादित करें</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            background: linear-gradient(150deg, #007bff, #6610f2, white, rgb(106, 233, 255));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: linear-gradient(150deg, #007bff, #6610f2, white, rgb(106, 233, 255));
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 390px;
+        }
+
+        .profile-pic {
+            border-radius: 50%;
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border: 4px solid #007bff;
+        }
+
+        .change-photo-btn {
+            background: linear-gradient(150deg, #007bff, #6610f2, white, rgb(106, 233, 255));
+            color: #1a1818;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+
+        .form-group {
+            text-align: left;
+            margin: 15px 0;
+        }
+
+        .form-group label {
+            font-weight: 800;
+            display: block;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 5px;
+            border: 2px solid #ffff;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .btn {
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .save-btn {
+            background: linear-gradient(150deg, #007bff, #6610f2, white, rgb(106, 233, 255));
+            color: rgb(0, 0, 0);
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            display: none;
+        }
+
+        .back-button {
+            
+            position: relative;
+            left: -45%;
+            background: linear-gradient(150deg, #007bff, #6610f2, white,);
+            color: rgb(0, 0, 0);
+            padding: 10px 18px;
+            border-color: #dc82ff;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(150deg, #007bff, #6610f2, white,);
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="account.html" class="back-button" id="back-home"> Back</a>
+        <h2>प्रोफ़ाइल संपादित करें</h2>
+        <div class="profile-pic-container">
+            <img id="profile-photo-preview" src="https://via.placeholder.com/140" class="profile-pic">
+            <input type="file" id="profile-photo-input" accept="image/*" hidden>
+            <button class="change-photo-btn" onclick="document.getElementById('profile-photo-input').click();">
+                फ़ोटो बदलें
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label for="name">पूरा नाम</label>
+            <input type="text" id="name" placeholder="अपना नाम दर्ज करें">
+        </div>
+        <div class="form-group">
+            <label for="mobile">मोबाइल नंबर</label>
+            <input type="tel" id="mobile" placeholder="10 अंकों का मोबाइल नंबर दर्ज करें">
+            <p class="error" id="mobile-error">कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें</p>
+        </div>
+        <div class="form-group">
+            <label for="email">ईमेल आईडी</label>
+            <input type="email" id="email" placeholder="अपना ईमेल दर्ज करें">
+            <p class="error" id="email-error">कृपया सही ईमेल पता दर्ज करें</p>
+        </div>
+
+        <button class="btn save-btn" onclick="validateAndSaveProfile()">परिवर्तन सहेजें</button>
+    </div>
+
+    <script>
+        // लोड किए गए डेटा को प्रदर्शित करें
+        window.onload = function () {
+            if (localStorage.getItem("profilePhoto")) {
+                document.getElementById("profile-photo-preview").src = localStorage.getItem("profilePhoto");
+            }
+            document.getElementById("name").value = localStorage.getItem("profileName") || "";
+            document.getElementById("mobile").value = localStorage.getItem("profileMobile") || "";
+            document.getElementById("email").value = localStorage.getItem("profileEmail") || "";
+        };
+
+        document.getElementById("profile-photo-input").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("profile-photo-preview").src = e.target.result;
+                    localStorage.setItem("profilePhoto", e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function validateAndSaveProfile() {
+            let name = document.getElementById("name").value.trim();
+            let mobile = document.getElementById("mobile").value.trim();
+            let email = document.getElementById("email").value.trim();
+
+            let mobileError = document.getElementById("mobile-error");
+            let emailError = document.getElementById("email-error");
+
+            let isValid = true;
+
+            // मोबाइल नंबर सत्यापन (10 अंकों का होना चाहिए)
+            if (!/^\d{10}$/.test(mobile)) {
+                mobileError.style.display = "block";
+                isValid = false;
+            } else {
+                mobileError.style.display = "none";
+            }
+
+            // ईमेल सत्यापन
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                emailError.style.display = "block";
+                isValid = false;
+            } else {
+                emailError.style.display = "none";
+            }
+
+            if (isValid) {
+                // सहेजें
+                localStorage.setItem("profileName", name);
+                localStorage.setItem("profileMobile", mobile);
+                localStorage.setItem("profileEmail", email);
+
+                // 1 सेकंड के बाद `account.html` पर जाएं (एनीमेशन का अनुभव बेहतर करने के लिए)
+                setTimeout(() => {
+                    window.location.href = "account.html";
+                }, 1000);
+            }
+        }
+
+        
+    </script>
+</body>
+</html>

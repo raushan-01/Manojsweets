@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .cart-container {
+    background: white;
+    width: 90%; /* Responsive width */
+    max-width: 400px; /* Limit max size */
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.5s ease-out;
+}
+
+
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-radius: 10px;
+            background: #f8f9fd;
+            margin-bottom: 10px;
+        }
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+        }
+        .item-info {
+            flex: 1;
+            margin-left: 10px;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-control button {
+            background: #6200ea;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        .total-section {
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
+        }
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background: #6200ea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+    background: #6200ea;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+    animation: bounce 1s ;
+}
+
+.back-btn:hover {
+    background: #4b00c2;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Apply animations */
+.cart-container {
+    animation: slideIn 0.5s ease-out;
+}
+
+.cart-item {
+    animation: fadeIn 0.4s ease-in;
+}
+
+.checkout-btn, .back-btn {
+    animation: bounce 1s;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+      <button class="back-btn" onclick="goBack()">Back</button>
+
+        <h2>My Cart</h2>
+        <div id="cart-items"></div>
+        <div class="total-section">Cart Total: <span id="total-price">₹0</span></div>
+        <div class="total-section">Delivery: <span id="delivery-charge">₹0</span></div>
+        <div class="total-section">Final Total: <span id="final-total">₹0</span></div>
+        <button class="checkout-btn">Order Now</button>
+    </div>
+
+    <script>
+   function loadBill() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || {};
+    let cartItemsContainer = document.getElementById('cart-items');
+    let totalPrice = 0;
+    cartItemsContainer.innerHTML = '';
+
+    for (let productID in cart) {
+        let product = cart[productID];
+        let productTotal = product.price * product.quantity;
+        totalPrice += productTotal;
+
+        let cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+            <img src="${product.image}" alt="${product.name}">
+            <div class="item-info">
+                <h3>${product.name}</h3>
+                <p>₹${product.price}</p>
+            </div>
+            <div class="quantity-control">
+                <button onclick="changeQuantity('${productID}', -1)">-</button>
+                <span>${product.quantity}</span>
+                <button onclick="changeQuantity('${productID}', 1)">+</button>
+            </div>
+            <button onclick="removeItem('${productID}')">❌</button>
+        `;
+        cartItemsContainer.appendChild(cartItem);
+    }
+
+    let deliveryCharge = totalPrice > 0 ? 50 : 0; // Fixed ₹50 delivery charge if cart is not empty
+    document.getElementById('total-price').textContent = `₹${totalPrice}`;
+    document.getElementById('delivery-charge').textContent = `₹${deliveryCharge}`;
+    document.getElementById('final-total').textContent = `₹${totalPrice + deliveryCharge}`;
+}
+
+  
+      function changeQuantity(item, amount) {
+          let cart = JSON.parse(localStorage.getItem('cart')) || {};
+          if (cart[item]) {
+              cart[item].quantity += amount;
+              if (cart[item].quantity <= 0) {
+                  delete cart[item]; // Remove item if quantity reaches 0
+              }
+              localStorage.setItem('cart', JSON.stringify(cart));
+              loadBill(); // Refresh UI
+          }
+      }
+  
+      function removeItem(item) {
+          let cart = JSON.parse(localStorage.getItem('cart')) || {};
+          delete cart[item]; // Remove item
+          localStorage.setItem('cart', JSON.stringify(cart));
+          loadBill(); // Refresh UI
+      }
+  
+      window.onload = loadBill;
+
+      function goBack() {
+    window.history.back();
+}
+
+  </script>
+  
+  
+</body>
+</html>

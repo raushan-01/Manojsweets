@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manage Addresses</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #28a745;
+            --bg-light: #f4f4f4;
+            --text-dark: #333;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(150deg, #ffcd82, #b485ff, white, rgb(179, 113, 255));
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: linear-gradient(150deg,#b485ff,  #b485ff,#b485ff, white, );
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-btn {
+            background: linear-gradient(150deg, #b485ff, #b485ff, );
+            color: rgb(255, 34, 34);
+            font-size: 20px;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .saved-address {
+            background: linear-gradient(150deg, #b485ff, #b485ff, #b485ff, white, );
+            padding: 10px;
+            border-radius: 5px;
+            border: 1.5px solid #ffad69;
+            margin: 5px 0;
+            position: relative;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .saved-address span {
+            display: block;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .back-button {
+            position: absolute;
+            margin-top: -65px;
+        
+            width: 25px;
+            min-width: auto;
+            height: auto;
+            color: rgb(0, 0, 0);
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(145deg, rgb(159, 143, 255));
+        }
+
+
+
+        .edit-btn {
+            color: var(--secondary-color);
+        }
+
+        .delete-btn {
+            color: red;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 181, 181, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #f4f4f4;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .close-btn {
+            background: red;
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+        }
+
+        input {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ffbd5b;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+
+        #save-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: var(--secondary-color);
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <a href="account.html" class="back-button" id="back-home"> Back</a>
+
+            <h2>Saved Addresses</h2>
+            <button class="add-btn" onclick="openModal()">➕</button>
+        </div>
+
+        <div id="savedAddresses">
+            <p>No saved addresses yet.</p>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">✖</button>
+            <h2 id="modalTitle">Add Address</h2>
+            <div class="form-group">
+                <label for="addressInput">Address</label>
+                <input type="text" id="addressInput" placeholder="Enter Address">
+            </div>
+            <div class="form-group">
+                <label for="pincode">Pincode</label>
+                <input type="text" id="pincode" placeholder="Enter Pincode">
+            </div>
+            <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" id="state" placeholder="Enter State">
+            </div>
+            <div class="form-group">
+                <label for="district">District</label>
+                <input type="text" id="district" placeholder="Enter District">
+            </div>
+
+            <div class="form-group">
+                <label for="mobileNumber">Mobile Number</label>
+                <input type="text" id="mobileNumber" placeholder="Enter Mobile Number">
+            </div>
+
+            <button onclick="saveAddress()" id="save-btn">Save Address</button>
+        </div>
+    </div>
+
+    <script>
+        let savedAddresses = JSON.parse(localStorage.getItem("savedAddresses")) || [];
+        let editingIndex = null;
+
+        function displaySavedAddresses() {
+            const container = document.getElementById("savedAddresses");
+            if (savedAddresses.length === 0) {
+                container.innerHTML = "<p>No saved addresses yet.</p>";
+                return;
+            }
+
+            container.innerHTML = savedAddresses.map((addr, index) => `
+                <div class="saved-address">
+                    <span><strong>Address:</strong> ${addr.fullAddress}</span>
+                    <span><strong>Pincode:</strong> ${addr.pincode}</span>
+                    <span><strong>State:</strong> ${addr.state}</span>
+                    <span><strong>District:</strong> ${addr.district}</span>
+                    <span><strong>Mobile Number:</strong> ${addr.mobile}</span>
+
+                    
+                    <div class="buttons">
+                        <button class="edit-btn" onclick="editAddress(event, ${index})">✏</button>
+                        <button class="delete-btn" onclick="deleteAddress(event, ${index})">✖</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function openModal() {
+            document.getElementById("modal").style.display = "flex";
+            document.getElementById("modalTitle").textContent = "Add Address";
+            document.getElementById("addressInput").value = "";
+            document.getElementById("pincode").value = "";
+            document.getElementById("state").value = "";
+            document.getElementById("district").value = "";
+            document.getElementById("mobileNumber").value = "";
+            editingIndex = null;
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        function saveAddress() {
+            const fullAddress = document.getElementById("addressInput").value;
+            const pincode = document.getElementById("pincode").value;
+            const state = document.getElementById("state").value;
+            const district = document.getElementById("district").value;
+            const mobile = document.getElementById("mobileNumber").value;
+
+            if (!fullAddress || !pincode || !state || !district || !mobile) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const addressData = { fullAddress, pincode, state, district, mobile };
+
+            if (editingIndex !== null) {
+                savedAddresses[editingIndex] = addressData;
+            } else {
+                savedAddresses.push(addressData);
+            }
+
+            localStorage.setItem("savedAddresses", JSON.stringify(savedAddresses));
+            displaySavedAddresses();
+            closeModal();
+        }
+
+        function editAddress(event, index) {
+            event.stopPropagation();
+            editingIndex = index;
+            const addr = savedAddresses[index];
+            document.getElementById("addressInput").value = addr.fullAddress;
+            document.getElementById("pincode").value = addr.pincode;
+            document.getElementById("state").value = addr.state;
+            document.getElementById("district").value = addr.district;
+            document.getElementById("mobileNumber").value = addr.mobile;
+            document.getElementById("modalTitle").textContent = "Edit Address";
+
+            openModal();
+        }
+
+        function deleteAddress(event, index) {
+            event.stopPropagation();
+            savedAddresses.splice(index, 1);
+            localStorage.setItem("savedAddresses", JSON.stringify(savedAddresses));
+            displaySavedAddresses();
+        }
+
+        displaySavedAddresses();
+    </script>
+
+</body>
+
+</html>

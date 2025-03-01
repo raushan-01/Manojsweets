@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manoj sweets shop</title>
+    <style>
+        /* General Styles */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            width: 100%;
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            /* Center the shop name */
+            align-items: center;
+            background-color: #ff6f61;
+            /* Sweet pinkish color */
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-nav :hover {
+            color: #92fffa;
+        }
+
+        .shop-name {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-top: 1px solid #ddd;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #555;
+            font-size: 12px;
+            transition: color 0.3s;
+        }
+
+        .nav-item img {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 5px;
+        }
+
+        .nav-item:hover {
+            color: #61dfff;
+        }
+
+        .nav-item.active {
+            color: #ff6f61;
+        }
+
+
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            background: url('images/hero-background.jpg') no-repeat center center/cover;
+            color: white;
+            padding: 50px 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin: 0 0 10px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin: 0 0 20px;
+        }
+
+        .cta-button {
+            background-color: #f1c40f;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #e67e22;
+        }
+
+        /* Categories Section */
+        .categories {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #f9f9f9;
+        }
+
+        .categories h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .category-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        .card .btn {
+            background-color: #ff6f61;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .card .btn:hover {
+            background-color: #e67e22;
+        }
+
+        /* Offers Section */
+        .offers {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .offers h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .offers p {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .offers .btn {
+            background-color: #f1c40f;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .offers .btn:hover {
+            background-color: #e67e22;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .footer a {
+            color: #f1c40f;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #e67e22;
+        }
+
+        .product-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-name {
+            font-size: 1.2em;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .product-price {
+            color: #007bff;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .add-to-cart-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #218838;
+        }
+
+
+        .cart-notification {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            border-radius: 5px;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <img src="file:///C:/Users/pc/Desktop/doctor%20&%20nurse/manoj%20sweets%20shop/home%20(1).png" alt="Home">
+                <span>Home</span>
+            </a>
+            <a href="categories.html" class="nav-item">
+                <img src="file:///C:/Users/pc/Desktop/doctor%20&%20nurse/manoj%20sweets%20shop/application.png" alt="Categories">
+                <span>Categories</span>
+            </a>
+            <a href="notification.html" class="nav-item">
+                <img src="file:///C:/Users/pc/Desktop/doctor%20&%20nurse/manoj%20sweets%20shop/bell.png" alt="Orders">
+                <span>notifications</span>
+            </a>
+            <a href="cart.html" class="nav-item" id="cart">
+                <img src="file:///C:/Users/pc/Desktop/doctor%20&%20nurse/manoj%20sweets%20shop/shopping-cart.png" alt="Cart">
+                <span>Cart</span>
+            </a>
+            <a href="account.html" class="nav-item">
+                <img src="file:///C:/Users/pc/Desktop/doctor%20&%20nurse/manoj%20sweets%20shop/user.png" alt="Profile">
+                <span>account</span>
+            </a>
+        </nav>
+
+
+    </header>
+
+    <section class="hero">
+        <h1>Welcome to Sweets Delight</h1>
+        <p>Your one-stop shop for the finest sweets and treats!</p>
+        <a href="#categories" class="cta-button">Shop Now</a>
+    </section>
+
+    <section id="categories" class="categories">
+        <h2>Shop by Category</h2>
+        <div class="category-cards">
+            <div class="card">
+                <img src="images/chocolates.jpg" alt="Chocolates">
+                <h3>Chocolates</h3>
+                <a href="chocolates.html" class="btn">Explore</a>
+            </div>
+            <div class="card">
+                <img src="images/cakes.jpg" alt="Cakes">
+                <h3>Cakes</h3>
+                <a href="cakes.html" class="btn">Explore</a>
+            </div>
+            <div class="card">
+                <img src="images/cookies.jpg" alt="Cookies">
+                <h3>Cookies</h3>
+                <a href="cookies.html" class="btn">Explore</a>
+            </div>
+            <div class="card">
+                <img src="images/candies.jpg" alt="Candies">
+                <h3>Candies</h3>
+                <a href="candies.html" class="btn">Explore</a>
+            </div>
+        </div>
+    </section>
+    <div id="cart-notification" class="cart-notification">Item added to cart!</div>
+    <div class="product-section">
+        <div class="product-card">
+            <img src="file:///C:/Users/pc/Desktop/doctor%20&%20nurse/manoj%20sweets%20shop/sweet-gulab-jamun-white-bowl-delicious-indian-dessert_84443-34333.avif"
+                width="50px" alt="Product 1">
+            <div class="product-name">gulab jamun </div>
+            <div class="product-price">$10.00</div>
+            <button class="add-to-cart-btn"
+                onclick="addToCart('gulab_jamun', 'Gulab Jamun', 10, 'file:///C:/Users/pc/Downloads/sweet-gulab-jamun-white-bowl-delicious-indian-dessert_84443-34333.avif')">Add
+                to Cart
+
+        </div>
+        <div class="product-card">
+            <img src="https://via.placeholder.com/150" alt="Product 2">
+            <div class="product-name">Product 2</div>
+            <div class="product-price">$15.00</div>
+            <button class="add-to-cart-btn" onclick="addToCart('Product 2', 15, 'https://via.placeholder.com/150')">Add
+                to Cart</button>
+        </div>
+        <div class="product-card">
+            <img src="https://via.placeholder.com/150" alt="Product 3">
+            <div class="product-name">Product 3</div>
+            <div class="product-price">$20.00</div>
+            <button class="add-to-cart-btn" onclick="addToCart('Product 3', 20, 'https://via.placeholder.com/150')">Add
+                to Cart</button>
+        </div>
+    </div>
+
+    <section id="offers" class="offers">
+        <h2>Special Offers</h2>
+        <p>Discover amazing discounts and deals on your favorite treats.</p>
+        <a href="offers.html" class="btn">View Offers</a>
+    </section>
+
+    <footer id="contact" class="footer">
+        <div class="contact-info">
+            <h3>Contact Us</h3>
+            <p>Address:</p>
+            <p>Phone: +91 8210826403</p>
+        </div>
+        <div class="social-media">
+            <h3>Follow Us</h3>
+            <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
+        </div>
+    </footer>
+    <script>// Functionality for the 'Shop Now' button
+        const ctaButton = document.querySelector('.cta-button');
+        ctaButton.addEventListener('click', () => {
+            const categoriesSection = document.getElementById('categories');
+            categoriesSection.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Highlight active navigation link on scroll
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = document.querySelectorAll('section');
+
+        window.addEventListener('scroll', () => {
+            let currentSection = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - sectionHeight / 3) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(currentSection)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        let totalPrice = 0;
+        let cart = JSON.parse(localStorage.getItem('cart')) || {}; // Load cart from localStorage
+
+        function addToCart(productID, productName, price, image) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+            if (cart[productID]) {
+                cart[productID].quantity += 1;
+                cart[productID].name = productName;  // Update the name if changed
+            } else {
+                cart[productID] = {
+                    name: productName,
+                    price: price,
+                    image: image,
+                    quantity: 1
+                };
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showNotification(`${productName} added to cart!`);
+        }
+
+
+
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+
+            cartItems.innerHTML = ''; // Clear the cart display first
+            totalPrice = 0; // Reset total price
+
+            // Update the cart display
+            for (let productName in cart) {
+                const product = cart[productName];
+                const productTotal = product.price * product.quantity;
+                totalPrice += productTotal; // Add to total price
+
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                            <img src="${product.image}" alt="${productName}">
+                            <span>${productName} - $${product.price.toFixed(2)}</span>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="changeQuantity('${productName}', -1)">-</button>
+                                <span>${product.quantity}</span>
+                                <button class="quantity-btn" onclick="changeQuantity('${productName}', 1)">+</button>
+                            </div>
+                            <button class="remove-btn" onclick="removeFromCart('${productName}')">
+                                <img src="https://cdn-icons-png.flaticon.com/512/34/34616.png" alt="Trash Bin">
+                            </button>
+                        `;
+
+                cartItems.appendChild(cartItem);
+            }
+
+            // Update the total price
+            cartTotal.textContent = `Total: $${totalPrice.toFixed(2)}`;
+        }
+
+        function changeQuantity(productName, change) {
+            if (cart[productName]) {
+                cart[productName].quantity += change;
+
+                if (cart[productName].quantity <= 0) {
+                    delete cart[productName]; // Remove product if quantity is less than or equal to 0
+                }
+
+                updateCart(); // Update cart UI
+                localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
+            }
+        }
+
+        function removeFromCart(productName) {
+            delete cart[productName];
+            updateCart(); // Update cart UI
+            localStorage.setItem('cart', JSON.stringify(cart)); // Update localStorage
+        }
+        // Function to show a notification when an item is added
+        function showNotification(message) {
+            const notification = document.getElementById('cart-notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+
+            // Hide the notification after 3 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        // Open Cart when "View Cart" button is clicked (Example usage)
+        document.getElementById('cart')?.addEventListener('click', openCartModal);
+    </script>
+</body>
+
+</html>
